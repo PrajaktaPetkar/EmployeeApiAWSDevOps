@@ -57,6 +57,17 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
+app.MapGet("/version", () =>
+{
+    return new
+    {
+        Version = "v2",
+        Deployment = "AWS ECS Fargate",
+        Status = "Success"
+    };
+});
+
+
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
