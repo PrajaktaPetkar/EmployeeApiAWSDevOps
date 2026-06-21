@@ -37,7 +37,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t employeeapi .
+          docker build -t employeeapi ./EmployeeApi
 
       - name: Tag Docker image
         run: |
