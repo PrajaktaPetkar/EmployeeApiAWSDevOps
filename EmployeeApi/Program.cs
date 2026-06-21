@@ -38,7 +38,7 @@ app.MapGet("/employees",() =>
     {
         Id=3,
         Name="Chchunil"
-    },
+    }
    });
 
 });
