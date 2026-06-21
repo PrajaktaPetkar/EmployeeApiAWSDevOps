@@ -33,7 +33,12 @@ app.MapGet("/employees",() =>
     {
         Id=2,
         Name="John"
-    }
+    },
+     new 
+    {
+        Id=3,
+        Name="Chchunil"
+    },
    });
 
 });
