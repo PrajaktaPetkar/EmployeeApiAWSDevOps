@@ -1,4 +1,4 @@
-name: Employee API CI
+name: Employee API CI/CD
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,3 +23,33 @@ jobs:
 
       - name: Build application
         run: dotnet build EmployeeApi/EmployeeApi.csproj --no-restore
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker image
+        run: |
+          docker build -t employeeapi .
+
+      - name: Tag Docker image
+        run: |
+          docker tag employeeapi:latest 106083617983.dkr.ecr.ap-south-1.amazonaws.com/employeeapi:latest
+
+      - name: Push Docker image
+        run: |
+          docker push 106083617983.dkr.ecr.ap-south-1.amazonaws.com/employeeapi:latest
+
+      - name: Force ECS deployment
+        run: |
+          aws ecs update-service \
+            --cluster employeeapi-cluster \
+            --service employeeapi-service \
+            --force-new-deployment
